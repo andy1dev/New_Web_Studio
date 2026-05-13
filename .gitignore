@@ -1,0 +1,36 @@
+# --- Dependencias y Archivos de Sistema ---
+node_modules/
+package-lock.json
+yarn.lock
+.DS_Store
+Thumbs.db
+
+# --- Compilados ---
+.next/
+out/
+build/
+dist/
+
+# --- Imágenes y Archivos de Diseño ---
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.gif
+*.webp
+*.ico
+*.artifact.json
+*.psd
+*.ai
+*.sketch
+*.fig
+
+# --- IDE y Editores ---
+.vscode/
+.idea/
+
+# --- Logs, Variables y Temp ---
+*.log
+.env*
+*.tmp
+*.temp

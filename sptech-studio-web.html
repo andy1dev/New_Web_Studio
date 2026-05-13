@@ -1,0 +1,589 @@
+
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPTECH Studio Web | Desarrollo de Software en Cuenca</title>
+  <meta name="description" content="Transformamos desafíos en activos digitales. Estrategia, diseño y desarrollo a medida en Cuenca, Ecuador.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/framer-motion@11.0.0/dist/framer-motion.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            dark: {
+              950: '#050508',
+              900: '#0a0a0f',
+              800: '#111118',
+              700: '#1a1a24',
+            },
+            neon: {
+              blue: '#00D4FF',
+              cyan: '#00FFE5',
+              purple: '#8B5CF6',
+            },
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #050508;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+    ::selection { background: #00D4FF; color: #050508; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0a0a0f; }
+    ::-webkit-scrollbar-thumb { background: #00D4FF; border-radius: 4px; }
+    .glass {
+      background: rgba(17, 17, 24, 0.7);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #00D4FF 0%, #00FFE5 50%, #8B5CF6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .grid-bg {
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.6), 0 0 60px rgba(0, 212, 255, 0.3); }
+    }
+    .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    .bento-card {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(17, 17, 24, 0.8) 0%, rgba(26, 26, 36, 0.6) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .bento-card:hover {
+      border-color: rgba(0, 212, 255, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 212, 255, 0.1);
+    }
+    .portfolio-card { position: relative; overflow: hidden; border-radius: 16px; }
+    .portfolio-card .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(5, 5, 8, 0.95) 0%, transparent 100%);
+      opacity: 0; transition: opacity 0.4s ease;
+    }
+    .portfolio-card:hover .overlay { opacity: 1; }
+    .portfolio-card .content {
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
+    .portfolio-card:hover .content { transform: translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+    const { motion, useInView, useScroll, useTransform } = Motion;
+
+    // Navbar
+    const Navbar = () => {
+      const [isScrolled, setIsScrolled] = useState(false);
+      const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+      useEffect(() => {
+        const handleScroll = () => setIsScrolled(window.scrollY > 50);
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+      }, []);
+
+      const navItems = [
+        { label: 'Inicio', href: '#hero' },
+        { label: 'Servicios', href: '#servicios' },
+        { label: 'Nosotros', href: '#nosotros' },
+        { label: 'Portafolio', href: '#portafolio' },
+        { label: 'Contacto', href: '#contacto' },
+      ];
+
+      const handleNavClick = (href) => {
+        setIsMobileMenuOpen(false);
+        document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+      };
+
+      return (
+        <>
+          <motion.nav
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+              isScrolled ? 'py-3 bg-dark-950/90 backdrop-blur-xl border-b border-zinc-800/50' : 'py-5'
+            }`}
+          >
+            <div className="max-w-7xl mx-auto px-6">
+              <div className="flex items-center justify-between">
+                <a href="#" className="flex items-center gap-2">
+                  <span className="text-2xl font-bold">SPTECH</span>
+                  <span className="text-2xl font-light text-neon-cyan">Studio Web</span>
+                </a>
+
+                <div className="hidden md:flex items-center gap-8">
+                  {navItems.map((item) => (
+                    <button
+                      key={item.label}
+                      onClick={() => handleNavClick(item.href)}
+                      className="text-sm font-medium text-zinc-400 hover:text-white transition-colors relative group"
+                    >
+                      {item.label}
+                      <span className="absolute -bottom-1 left-0 w-0 h-px bg-neon-cyan transition-all duration-300 group-hover:w-full" />
+                    </button>
+                  ))}
+                </div>
+
+                <div className="hidden md:flex">
+                  <button
+                    onClick={() => handleNavClick('#contacto')}
+                    className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-neon-blue to-neon-cyan text-dark-950 hover:shadow-lg hover:shadow-neon-blue/25 transition-all"
+                  >
+                    Comenzar Proyecto
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5"
+                >
+                  <span className={`w-6 h-0.5 bg-white transition-all ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+                  <span className={`w-6 h-0.5 bg-white ${isMobileMenuOpen ? 'opacity-0' : ''}`} />
+                  <span className={`w-6 h-0.5 bg-white transition-all ${isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+                </button>
+              </div>
+            </div>
+          </motion.nav>
+
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="fixed inset-0 z-40 md:hidden bg-dark-950/98 pt-24 px-6"
+            >
+              <div className="flex flex-col gap-6">
+                {navItems.map((item, i) => (
+                  <button
+                    key={item.label}
+                    onClick={() => handleNavClick(item.href)}
+                    className="text-2xl font-semibold text-left text-zinc-300"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </>
+      );
+    };
+
+    // Hero Section
+    const Hero = () => {
+      const ref = useRef(null);
+      const isInView = useInView(ref, { once: true });
+      const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+      const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
+      const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+      return (
+        <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden grid-bg">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-dark-950/50 to-dark-950" />
+          
+          <motion.div style={{ y, opacity }} className="relative z-20 max-w-6xl mx-auto px-6 text-center">
+
+
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mb-6"
+            >
+              <span className="text-white">Transformamos</span><br />
+              <span className="gradient-text">Desafíos</span><br />
+              <span className="text-white">en Activos Digitales</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="text-xl md:text-2xl text-zinc-400 max-w-3xl mx-auto mb-10 leading-relaxed"
+            >
+              Estrategia, diseño y desarrollo a medida para empresas en Cuenca.
+              <br className="hidden md:block" />
+              Construimos soluciones que impulsan tu negocio al siguiente nivel.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+            >
+              <button className="group px-8 py-4 rounded-xl font-semibold text-lg overflow-hidden animate-pulse-glow transition-all hover:scale-105 bg-gradient-to-r from-neon-blue to-neon-cyan text-dark-950">
+                <span className="flex items-center gap-2">
+                  Comenzar Proyecto
+                  <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </span>
+              </button>
+              <button className="px-8 py-4 rounded-xl font-semibold text-lg border border-zinc-700 text-zinc-300 hover:border-zinc-500 glass">
+                Ver Portafolio
+              </button>
+            </motion.div>
+          </motion.div>
+
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-dark-950 to-transparent" />
+        </section>
+      );
+    };
+
+    // Services Section
+    const services = [
+      { title: 'Frontend', subtitle: 'UI/UX Responsivo', desc: 'Interfaces modernas con React y Next.js. Diseño adaptativo en cualquier dispositivo.', icon: '💻' },
+      { title: 'Backend', subtitle: 'Arquitecturas Escalables', desc: 'APIs robustas y escalables. Node.js, bases de datos y microservicios.', icon: '⚙️' },
+      { title: 'eCommerce', subtitle: 'Tiendas Autogestionables', desc: 'Plataformas de venta online con gestión de inventario y pagos integrados.', icon: '🛒' },
+      { title: 'Facturación', subtitle: 'Automatización Fiscal', desc: 'Sistemas de facturación electrónica integrados con el SRI.', icon: '📋' },
+      { title: 'ERP', subtitle: 'Sistemas de Gestión', desc: 'Soluciones empresariales personalizadas. Control de inventarios y ventas.', icon: '📊' },
+      { title: 'LMS', subtitle: 'Educación Online', desc: 'Plataformas de e-learning con Moodle y soluciones personalizadas.', icon: '🎓' },
+    ];
+
+    const Services = () => {
+      const ref = useRef(null);
+      const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+      return (
+        <section id="servicios" className="relative py-32 px-6">
+          <div className="absolute inset-0 grid-bg opacity-50" />
+          <div className="relative z-10 max-w-7xl mx-auto" ref={ref}>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              className="text-center mb-16"
+            >
+              <span className="text-neon-cyan text-sm font-semibold tracking-widest uppercase mb-4 block">Nuestros Servicios</span>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">Soluciones <span className="gradient-text">Integrales</span></h2>
+              <p className="text-zinc-400 text-lg max-w-2xl mx-auto">Desde la concepción hasta la implementación, acompañamos cada etapa de tu transformación digital.</p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {services.map((service, i) => (
+                <motion.div
+                  key={service.title}
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: i * 0.1 }}
+                  className="bento-card p-8 group cursor-pointer"
+                >
+                  <div className="w-16 h-16 rounded-2xl bg-dark-800 border border-zinc-800 flex items-center justify-center mb-6 text-3xl group-hover:border-neon-blue/50">
+                    {service.icon}
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2 group-hover:text-neon-cyan">{service.title}</h3>
+                  <p className="text-sm text-neon-cyan/80 mb-4 font-medium">{service.subtitle}</p>
+                  <p className="text-zinc-400 leading-relaxed">{service.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    // About Section
+    const About = () => {
+      const ref = useRef(null);
+      const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+      return (
+        <section id="nosotros" className="relative py-32 px-6 overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-neon-blue/5 rounded-full blur-[120px]" />
+          <div className="relative z-10 max-w-7xl mx-auto" ref={ref}>
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={isInView ? { opacity: 1, x: 0 } : {}}
+                className="glass rounded-3xl p-10"
+              >
+                <div className="grid grid-cols-2 gap-6">
+                  {[
+                    { icon: '⚡', title: 'Innovación', desc: 'Tecnología de vanguardia' },
+                    { icon: '👥', title: 'Equipos Dedicados', desc: 'Profesionales especializados' },
+                    { icon: '🔒', title: 'Seguridad', desc: 'Estándares enterprise' },
+                    { icon: '📈', title: 'Escalabilidad', desc: 'Crecen con tu negocio' },
+                  ].map((item) => (
+                    <div key={item.title} className="space-y-4">
+                      <div className="w-12 h-12 rounded-xl bg-neon-blue/20 flex items-center justify-center text-xl">{item.icon}</div>
+                      <h4 className="font-semibold">{item.title}</h4>
+                      <p className="text-zinc-400 text-sm">{item.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={isInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ delay: 0.2 }}
+                className="space-y-8"
+              >
+                <div>
+                  <span className="text-neon-cyan text-sm font-semibold tracking-widest uppercase mb-4 block">Sobre Nosotros</span>
+                  <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">Tu Partner Estratégico en <span className="gradient-text">Transformación Digital</span></h2>
+                </div>
+                <div className="space-y-6 text-zinc-400 leading-relaxed">
+                  <p>En SPTECH Studio Web somos más que una agencia de desarrollo. Somos tus partners estratégicos en el camino hacia la transformación digital.</p>
+                  <p>Trabajamos con metodologías ágiles que nos permiten iterar rápidamente, adaptarnos a tus necesidades y entregar resultados excepcionales en cada sprint.</p>
+                </div>
+                <div className="flex gap-4">
+                  {['✅ Scrum & Kanban', '✅ CI/CD Pipeline', '✅ Code Review'].map((item) => (
+                    <span key={item} className="text-sm text-zinc-400">{item}</span>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    // Portfolio Section
+    const projects = [
+      { id: 1, title: 'BCB Play', category: 'eCommerce Gaming', date: '2024', desc: 'Plataforma de venta de juegos digitales con integración de pagos múltiples.' },
+      { id: 2, title: 'Clínica Los Ángeles', category: 'Sistema Médico', date: '2024', desc: 'Sistema de gestión hospitalaria con agendamiento y facturación SRI.' },
+      { id: 3, title: 'Reuma Excelencia', category: 'Landing Page médica', date: '2023', desc: 'Sitio web informativo con sistema de citas en línea.' },
+      { id: 4, title: 'Biology Locbio', category: 'eCommerce Científico', date: '2024', desc: 'Tienda online para productos de laboratorio con catálogo avanzado.' },
+      { id: 5, title: 'Handy VIP', category: 'App de Servicios', date: '2023', desc: 'Aplicación móvil para servicios de limpieza premium.' },
+    ];
+
+    const Portfolio = () => {
+      const ref = useRef(null);
+      const isInView = useInView(ref, { once: true, margin: "-100px" });
+      const [hovered, setHovered] = useState(null);
+
+      return (
+        <section id="portafolio" className="relative py-32 px-6">
+          <div className="absolute inset-0 grid-bg opacity-30" />
+          <div className="relative z-10 max-w-7xl mx-auto" ref={ref}>
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={isInView ? { opacity: 1, y: 0 } : {}} className="text-center mb-16">
+              <span className="text-neon-cyan text-sm font-semibold tracking-widest uppercase mb-4 block">Nuestro Trabajo</span>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">Proyectos que <span className="gradient-text">Inspiran</span></h2>
+              <p className="text-zinc-400 text-lg max-w-2xl mx-auto">Cada proyecto es una historia de transformación digital. Conoce cómo hemos ayudado a empresas como la tuya.</p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {projects.map((project, i) => (
+                <motion.div
+                  key={project.id}
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: i * 0.1 }}
+                  className="group"
+                  onMouseEnter={() => setHovered(project.id)}
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  <div className={`portfolio-card aspect-[4/3] ${hovered === project.id ? 'ring-2 ring-neon-blue' : ''}`}>
+                    <div className="absolute inset-0 bg-gradient-to-br from-dark-800 to-dark-900" />
+                    <div className="absolute inset-0 flex items-center justify-center text-6xl opacity-20">{['🎮','🏥','💊','🧬','✨'][i]}</div>
+                    <div className="overlay" />
+                    <div className="content absolute bottom-0 left-0 right-0 p-6">
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="px-3 py-1 rounded-full text-xs font-medium bg-neon-blue/20 text-neon-cyan border border-neon-blue/30">{project.category}</span>
+                        <span className="text-zinc-500 text-sm">{project.date}</span>
+                      </div>
+                      <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
+                      <p className="text-zinc-400 text-sm">{project.desc}</p>
+                    </div>
+                  </div>
+                  <div className="mt-4 flex items-center justify-between">
+                    <h4 className="font-semibold group-hover:text-neon-cyan">{project.title}</h4>
+                    <span className="text-sm text-zinc-500">{project.date}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    // Metrics Section
+    const metrics = [
+      { value: 150, suffix: '+', label: 'Proyectos Realizados', icon: '🏆' },
+      { value: 85, suffix: '+', label: 'Clientes Satisfechos', icon: '😊' },
+      { value: 8, suffix: '+', label: 'Años de Experiencia', icon: '⏱️' },
+      { value: 99, suffix: '%', label: 'Tasa de Éxito', icon: '📈' },
+    ];
+
+    const Metrics = () => {
+      const ref = useRef(null);
+      const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+      return (
+        <section className="relative py-32 px-6">
+          <div className="absolute inset-0 bg-gradient-to-b from-dark-950 via-dark-900 to-dark-950" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-neon-blue/5 rounded-full blur-[150px]" />
+          <div className="relative z-10 max-w-7xl mx-auto" ref={ref}>
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={isInView ? { opacity: 1, y: 0 } : {}} className="text-center mb-16">
+              <span className="text-neon-cyan text-sm font-semibold tracking-widest uppercase mb-4 block">Resultados</span>
+              <h2 className="text-4xl md:text-5xl font-bold">Números que <span className="gradient-text">Hablan</span></h2>
+            </motion.div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+              {metrics.map((metric, i) => (
+                <motion.div
+                  key={metric.label}
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: i * 0.1 }}
+                  className="glass rounded-3xl p-8 text-center"
+                >
+                  <div className="text-5xl mb-4">{metric.icon}</div>
+                  <div className="text-5xl font-bold mb-2">
+                    <span className="text-white">{metric.value}</span>
+                    <span className="gradient-text">{metric.suffix}</span>
+                  </div>
+                  <h3 className="text-lg font-semibold">{metric.label}</h3>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    // Footer
+    const Footer = () => {
+      const ref = useRef(null);
+      const isInView = useInView(ref, { once: true, margin: "-100px" });
+      const [form, setForm] = useState({ name: '', email: '', message: '' });
+      const [sent, setSent] = useState(false);
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        setSent(true);
+        setTimeout(() => { setSent(false); setForm({ name: '', email: '', message: '' }); }, 3000);
+      };
+
+      return (
+        <footer id="contacto" className="relative pt-32 pb-12 px-6 bg-dark-900">
+          <div className="absolute inset-0 grid-bg opacity-20" />
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon-blue/30 to-transparent" />
+          <div className="relative z-10 max-w-7xl mx-auto" ref={ref}>
+            <div className="grid lg:grid-cols-2 gap-16 mb-20">
+              <motion.div initial={{ opacity: 0, x: -50 }} animate={isInView ? { opacity: 1, x: 0 } : {}} className="space-y-8">
+                <div>
+                  <h3 className="text-3xl font-bold mb-4">¿Listo para <span className="gradient-text">transformar</span> tu negocio?</h3>
+                  <p className="text-zinc-400">Agenda una consulta gratuita y descubre cómo podemos ayudarte.</p>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-neon-blue/10 flex items-center justify-center">📍</div>
+                    <div>
+                      <p className="font-semibold">Ubicación</p>
+                      <p className="text-zinc-400 text-sm">Av. Unidad Nacional y México, Cuenca, Ecuador</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-neon-cyan/10 flex items-center justify-center">📧</div>
+                    <div>
+                      <p className="font-semibold">Email</p>
+                      <a href="mailto:hola@sptech.ec" className="text-zinc-400 text-sm hover:text-neon-cyan">hola@sptech.ec</a>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  {['in', 'gh', 'x', 'ig'].map((s) => (
+                    <a key={s} href="#" className="w-12 h-12 rounded-xl bg-dark-800 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:border-neon-blue hover:text-neon-cyan">{s}</a>
+                  ))}
+                </div>
+              </motion.div>
+
+              <motion.form initial={{ opacity: 0, x: 50 }} animate={isInView ? { opacity: 1, x: 0 } : {}} transition={{ delay: 0.2 }} onSubmit={handleSubmit} className="glass rounded-3xl p-8 space-y-6">
+                <div className="grid grid-cols-2 gap-6">
+                  <input type="text" placeholder="Nombre" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} className="px-4 py-3 rounded-xl bg-dark-800 border border-zinc-800 text-white placeholder-zinc-500 focus:border-neon-blue" required />
+                  <input type="email" placeholder="Email" value={form.email} onChange={(e) => setForm({...form, email: e.target.value})} className="px-4 py-3 rounded-xl bg-dark-800 border border-zinc-800 text-white placeholder-zinc-500 focus:border-neon-blue" required />
+                </div>
+                <textarea placeholder="Cuéntanos sobre tu proyecto..." rows={4} value={form.message} onChange={(e) => setForm({...form, message: e.target.value})} className="w-full px-4 py-3 rounded-xl bg-dark-800 border border-zinc-800 text-white placeholder-zinc-500 focus:border-neon-blue resize-none" required />
+                <button type="submit" className={`w-full py-4 rounded-xl font-semibold text-lg ${sent ? 'bg-emerald-500 text-white' : 'bg-gradient-to-r from-neon-blue to-neon-cyan text-dark-950'}`}>
+                  {sent ? '✓ ¡Mensaje Enviado!' : 'Enviar Mensaje'}
+                </button>
+              </motion.form>
+            </div>
+
+            <div className="border-t border-zinc-800 pt-12">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+                <div>
+                  <h4 className="font-semibold mb-4">Servicios</h4>
+                  <ul className="space-y-2 text-sm text-zinc-400">
+                    {['Frontend', 'Backend', 'eCommerce', 'Facturación', 'ERP', 'LMS'].map(l => <li key={l}><a href="#">{l}</a></li>)}
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-4">Empresa</h4>
+                  <ul className="space-y-2 text-sm text-zinc-400">
+                    {['Sobre Nosotros', 'Portafolio', 'Metodología', 'Carreras'].map(l => <li key={l}><a href="#">{l}</a></li>)}
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-4">Legal</h4>
+                  <ul className="space-y-2 text-sm text-zinc-400">
+                    {['Términos', 'Privacidad', 'Cookies'].map(l => <li key={l}><a href="#">{l}</a></li>)}
+                  </ul>
+                </div>
+                <div>
+                  <div className="mb-4"><span className="text-2xl font-bold">SPTECH</span><span className="text-2xl font-light text-neon-cyan">Studio Web</span></div>
+                  <p className="text-zinc-500 text-sm">Transformamos desafíos en activos digitales.</p>
+                </div>
+              </div>
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-zinc-800">
+                <p className="text-zinc-500 text-sm">© 2024 SPTECH Studio Web. Todos los derechos reservados.</p>
+                <p className="text-zinc-500 text-sm">Hecho con ❤️ en Cuenca, Ecuador</p>
+              </div>
+            </div>
+          </div>
+        </footer>
+      );
+    };
+
+    // Main App
+    const App = () => (
+      <main>
+        <Navbar />
+        <Hero />
+        <Services />
+        <About />
+        <Portfolio />
+        <Metrics />
+        <Footer />
+      </main>
+    );
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
