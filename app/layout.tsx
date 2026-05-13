@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import Cursor from '@/components/Cursor'
+import { ThemeProvider } from '@/components/ThemeProvider'
 
 export const metadata: Metadata = {
   title: 'SPTECH Studio Web | Desarrollo de Software en Cuenca',
@@ -14,10 +15,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es" className="dark">
+    <html lang="es" suppressHydrationWarning>
       <body className="bg-dark-950 text-white antialiased">
-        <Cursor />
-        {children}
+        <ThemeProvider>
+          <Cursor />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )

@@ -71,7 +71,7 @@ export default function Hero() {
                 delay: 0.3 + index * 0.15,
                 ease: [0.215, 0.61, 0.355, 1]
               }}
-              className={`inline-block mr-4 ${index === 1 ? 'gradient-text' : 'text-white'}`}
+              className={`inline-block mr-4 ${index === 1 ? 'gradient-text' : 'dark:text-white text-zinc-900'}`}
             >
               {word}
             </motion.span>
@@ -82,7 +82,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.9 }}
-          className="text-xl md:text-2xl text-zinc-400 max-w-3xl mx-auto mb-10 leading-relaxed"
+          className="text-xl md:text-2xl dark:text-zinc-400 text-zinc-600 max-w-3xl mx-auto mb-10 leading-relaxed"
         >
           <motion.span
             initial={{ opacity: 0 }}
@@ -96,7 +96,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ delay: 1.1 }}
-            className="text-zinc-500"
+            className="dark:text-zinc-500 text-zinc-500"
           >
             Construimos soluciones que impulsan tu negocio al siguiente nivel.
           </motion.span>
@@ -143,7 +143,7 @@ export default function Hero() {
 
           <motion.button
             ref={secondCtaRef}
-            className="group relative px-8 py-4 rounded-xl font-semibold text-lg border border-zinc-700 text-zinc-300 transition-all duration-300 glass overflow-hidden"
+            className="group relative px-8 py-4 rounded-xl font-semibold text-lg border dark:border-zinc-700 border-zinc-300 dark:text-zinc-300 text-zinc-700 transition-all duration-300 glass overflow-hidden"
             whileHover={{ scale: 1.05, borderColor: 'rgba(0, 212, 255, 0.5)' }}
             whileTap={{ scale: 0.95 }}
           >
@@ -165,7 +165,7 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 1, delay: 1.3 }}
-          className="flex items-center justify-center gap-2 text-zinc-500"
+          className="flex items-center justify-center gap-2 dark:text-zinc-500 text-zinc-400"
         >
           <span className="w-8 h-px bg-gradient-to-r from-transparent to-zinc-700" />
           <motion.span

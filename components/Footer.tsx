@@ -32,7 +32,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className="relative pt-32 pb-12 px-6 bg-dark-900">
+    <footer className="relative pt-32 pb-12 px-6 dark:bg-dark-900 bg-gray-100">
       <div className="absolute inset-0 grid-bg opacity-20" />
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon-blue/30 to-transparent" />
 
@@ -48,7 +48,7 @@ export default function Footer() {
               <h3 className="text-3xl font-bold mb-4">
                 ¿Listo para <span className="gradient-text">transformar</span> tu negocio?
               </h3>
-              <p className="text-zinc-400 leading-relaxed">
+              <p className="dark:text-zinc-400 text-zinc-600 leading-relaxed">
                 Agenda una consulta gratuita y descubre cómo podemos ayudarte a alcanzar tus objetivos digitales.
               </p>
             </div>
@@ -104,7 +104,7 @@ export default function Footer() {
             <form onSubmit={handleSubmit} className="glass-card p-8 rounded-3xl space-y-6">
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-zinc-400 mb-2">
+                  <label htmlFor="name" className="block text-sm font-medium dark:text-zinc-400 text-zinc-600 mb-2">
                     Nombre
                   </label>
                   <input
@@ -112,13 +112,13 @@ export default function Footer() {
                     id="name"
                     value={formState.name}
                     onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-dark-800 border border-zinc-800 text-white placeholder-zinc-500 focus:border-neon-blue focus:ring-1 focus:ring-neon-blue/20 transition-all"
+                    className="w-full px-4 py-3 rounded-xl dark:bg-dark-800 bg-white dark:border-zinc-800 border-zinc-200 dark:text-white text-zinc-900 dark:placeholder-zinc-500 placeholder-zinc-400 focus:border-neon-blue focus:ring-1 focus:ring-neon-blue/20 transition-all"
                     placeholder="Tu nombre"
                     required
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-zinc-400 mb-2">
+                  <label htmlFor="email" className="block text-sm font-medium dark:text-zinc-400 text-zinc-600 mb-2">
                     Email
                   </label>
                   <input
@@ -126,7 +126,7 @@ export default function Footer() {
                     id="email"
                     value={formState.email}
                     onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-dark-800 border border-zinc-800 text-white placeholder-zinc-500 focus:border-neon-blue focus:ring-1 focus:ring-neon-blue/20 transition-all"
+                    className="w-full px-4 py-3 rounded-xl dark:bg-dark-800 bg-white dark:border-zinc-800 border-zinc-200 dark:text-white text-zinc-900 dark:placeholder-zinc-500 placeholder-zinc-400 focus:border-neon-blue focus:ring-1 focus:ring-neon-blue/20 transition-all"
                     placeholder="correo@ejemplo.com"
                     required
                   />
@@ -134,7 +134,7 @@ export default function Footer() {
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-zinc-400 mb-2">
+                <label htmlFor="message" className="block text-sm font-medium dark:text-zinc-400 text-zinc-600 mb-2">
                   Mensaje
                 </label>
                 <textarea
@@ -142,7 +142,7 @@ export default function Footer() {
                   value={formState.message}
                   onChange={(e) => setFormState({ ...formState, message: e.target.value })}
                   rows={4}
-                  className="w-full px-4 py-3 rounded-xl bg-dark-800 border border-zinc-800 text-white placeholder-zinc-500 focus:border-neon-blue focus:ring-1 focus:ring-neon-blue/20 transition-all resize-none"
+                  className="w-full px-4 py-3 rounded-xl dark:bg-dark-800 bg-white dark:border-zinc-800 border-zinc-200 dark:text-white text-zinc-900 dark:placeholder-zinc-500 placeholder-zinc-400 focus:border-neon-blue focus:ring-1 focus:ring-neon-blue/20 transition-all resize-none"
                   placeholder="Cuéntanos sobre tu proyecto..."
                   required
                 />
@@ -172,7 +172,7 @@ export default function Footer() {
           </motion.div>
         </div>
 
-        <div className="border-t border-zinc-800 pt-12">
+        <div className="border-t dark:border-zinc-800 border-zinc-200 pt-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
             <div>
               <h4 className="font-semibold mb-4">Servicios</h4>
