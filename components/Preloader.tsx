@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import styles from './Preloader.module.css'
 
 export default function Preloader() {
   const [visible, setVisible] = useState(false)
@@ -63,21 +62,21 @@ export default function Preloader() {
   return (
     <div
       id="loading-screen"
-      className={`${styles.loader} ${fadeOut ? styles.fadeOut : ''} ${hidden ? styles.hidden : ''}`}
+      className={`preloader-loader ${fadeOut ? 'preloader-fadeOut' : ''} ${hidden ? 'preloader-hidden' : ''}`}
     >
-      <div className={`${styles.loaderLabel} ${visible ? styles.visible : ''}`}>
+      <div className={`preloader-loaderLabel ${visible ? 'preloader-visible' : ''}`}>
         SPTECH Studio Web
       </div>
       <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div className={`${styles.loaderWord} ${wordClass}`}>
+        <div className={`preloader-loaderWord ${wordClass === 'entering' ? 'preloader-entering' : wordClass === 'active' ? 'preloader-active' : 'preloader-exiting'}`}>
           {currentWord}
         </div>
       </div>
-      <div className={`${styles.loaderCounter} ${visible ? styles.visible : ''}`}>
+      <div className={`preloader-loaderCounter ${visible ? 'preloader-visible' : ''}`}>
         {progress.toString().padStart(3, '0')}
       </div>
-      <div className={styles.loaderBarTrack}>
-        <div className={styles.loaderBarFill} style={{ width: `${progress}%` }} />
+      <div className="preloader-loaderBarTrack">
+        <div className="preloader-loaderBarFill" style={{ width: `${progress}%` }} />
       </div>
     </div>
   )
