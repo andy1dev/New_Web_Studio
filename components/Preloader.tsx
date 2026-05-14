@@ -10,13 +10,13 @@ export default function Preloader() {
   const [wordClass, setWordClass] = useState<'entering' | 'active' | 'exiting'>('entering')
   const [counter, setCounter] = useState(0)
 
-  const words = ['W', 'WE', 'WEB', 'WEB ', 'WEB S', 'WEB ST', 'WEB STU', 'WEB STUD', 'WEB STUDI', 'WEB STUDIO']
+  const words = ['Diseño','Innovación','Creatividad','Desarrollo']
 
   useEffect(() => {
     setVisible(true)
 
-    const duration = 2000
-    const interval = 20
+    const duration = 4000
+    const interval = 50
     const steps = duration / interval
     let currentStep = 0
 
