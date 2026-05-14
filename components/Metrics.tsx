@@ -3,9 +3,6 @@
 import { useRef, useEffect } from 'react'
 import { motion, useInView } from 'framer-motion'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-gsap.registerPlugin(ScrollTrigger)
 
 const metrics = [
   {
@@ -70,12 +67,9 @@ export default function Metrics() {
 
       gsap.to(obj, {
         value: target,
-        duration: 2,
+        duration: 2.5,
+        delay: index * 0.15, // Pequeño retraso en cascada para que se vea más orgánico
         ease: 'power2.out',
-        scrollTrigger: {
-          trigger: ref.current,
-          start: 'top 80%',
-        },
         onUpdate: () => {
           if (counter) {
             counter.textContent = Math.round(obj.value).toString()
@@ -106,31 +100,35 @@ export default function Metrics() {
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {metrics.map((metric, index) => (
             <motion.div
               key={metric.label}
               initial={{ opacity: 0, y: 50 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="glass-card p-8 text-center group hover:border-neon-blue/30 transition-all duration-500"
+              className="glass-card p-5 sm:p-6 md:p-8 group hover:border-neon-blue/30 transition-all duration-500 flex flex-row sm:flex-col items-center sm:items-center sm:text-center text-left gap-5 sm:gap-0"
             >
-              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-neon-blue/20 to-neon-cyan/10 flex items-center justify-center text-neon-cyan group-hover:scale-110 transition-transform duration-300">
-                {metric.icon}
+              <div className="shrink-0 w-14 h-14 sm:w-16 sm:h-16 mx-0 sm:mx-auto mb-0 sm:mb-6 rounded-xl sm:rounded-2xl bg-gradient-to-br from-neon-blue/20 to-neon-cyan/10 flex items-center justify-center text-neon-cyan group-hover:scale-110 transition-transform duration-300">
+                <div className="scale-90 sm:scale-100 flex items-center justify-center">
+                  {metric.icon}
+                </div>
               </div>
 
-              <div className="text-5xl md:text-6xl font-bold mb-3">
-                <span
-                  ref={(el) => { countersRef.current[index] = el }}
-                  className="counter-value text-white"
-                >
-                  0
-                </span>
-                <span className="gradient-text">{metric.suffix}</span>
-              </div>
+              <div className="flex-1">
+                <div className="text-4xl md:text-5xl lg:text-6xl font-bold mb-1 sm:mb-3">
+                  <span
+                    ref={(el) => { countersRef.current[index] = el }}
+                    className="counter-value text-white tracking-tight"
+                  >
+                    0
+                  </span>
+                  <span className="gradient-text">{metric.suffix}</span>
+                </div>
 
-              <h3 className="text-xl font-semibold mb-2">{metric.label}</h3>
-              <p className="text-zinc-500 text-sm">{metric.description}</p>
+                <h3 className="text-sm sm:text-base md:text-lg font-semibold mb-1 leading-tight">{metric.label}</h3>
+                <p className="text-zinc-500 text-xs sm:text-sm leading-snug">{metric.description}</p>
+              </div>
             </motion.div>
           ))}
         </div>

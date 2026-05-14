@@ -297,6 +297,7 @@ export default function Services() {
                     cursor: 'default',
                     zIndex: 1,
                   }}
+                  data-pos={service.pos}
                 >
                   <span className="text-[11px] tracking-[0.12em] uppercase text-white/40 font-mono">
                     Track record
@@ -431,22 +432,30 @@ export default function Services() {
             grid-template-columns: repeat(2, 1fr);
             grid-auto-rows: 200px;
           }
-          .bento-card {
-            grid-column: span 2 !important;
-          }
-          .bento-card[data-pos="0"],
-          .bento-card[data-pos="1"] {
-            grid-row: span 2;
-          }
+          .bento-card[data-pos="0"] { grid-column: span 2 !important; grid-row: span 2 !important; }
+          .bento-card[data-pos="1"] { grid-column: span 1 !important; grid-row: span 2 !important; }
+          .bento-card[data-pos="2"] { grid-column: span 1 !important; grid-row: span 2 !important; }
+          .bento-card[data-pos="3"] { grid-column: span 1 !important; grid-row: span 1 !important; }
+          .bento-card[data-pos="4"] { grid-column: span 1 !important; grid-row: span 1 !important; }
+          .bento-card[data-pos="5"] { grid-column: span 2 !important; grid-row: span 1 !important; }
         }
 
         @media (max-width: 640px) {
           .bento-grid {
-            grid-template-columns: 1fr;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
           }
           .bento-card {
-            grid-column: span 1 !important;
-            grid-row: span 1 !important;
+            height: auto !important;
+            min-height: 260px;
+          }
+          .bento-card[data-pos="0"] {
+            min-height: 380px;
+          }
+          .bento-card[data-pos="1"],
+          .bento-card[data-pos="2"] {
+            min-height: 300px;
           }
         }
       `}</style>

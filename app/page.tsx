@@ -10,7 +10,7 @@ import About from '@/components/About'
 import Portfolio from '@/components/Portfolio'
 import Metrics from '@/components/Metrics'
 import Footer from '@/components/Footer'
-import Preloader from '@/components/Preloader'
+import Preloader from '@/components/ui/combined-preloader'
 
 
 
