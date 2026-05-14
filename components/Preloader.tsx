@@ -3,77 +3,63 @@
 import { useState, useEffect } from 'react'
 
 export default function Preloader() {
-  const [visible, setVisible] = useState(false)
   const [fadeOut, setFadeOut] = useState(false)
   const [hidden, setHidden] = useState(false)
+  const [visible, setVisible] = useState(false)
   const [progress, setProgress] = useState(0)
-  const [currentWord, setCurrentWord] = useState('')
-  const [wordClass, setWordClass] = useState('entering')
+  const [wordClass, setWordClass] = useState<'entering' | 'active' | 'exiting'>('entering')
+  const [counter, setCounter] = useState(0)
 
-  const words = ['Diseño', 'Código', 'Digital']
+  const words = ['W', 'WE', 'WEB', 'WEB ', 'WEB S', 'WEB ST', 'WEB STU', 'WEB STUD', 'WEB STUDI', 'WEB STUDIO']
 
   useEffect(() => {
     setVisible(true)
 
-    // Word animation
-    let wordIdx = 0
-    setCurrentWord(words[0])
-    setTimeout(() => {
-      setWordClass('active')
-    }, 100)
+    const duration = 2000
+    const interval = 20
+    const steps = duration / interval
+    let currentStep = 0
 
-    const nextWord = () => {
-      wordIdx++
-      if (wordIdx >= words.length) return
-      setWordClass('exiting')
-      setTimeout(() => {
-        setCurrentWord(words[wordIdx])
+    const timer = setInterval(() => {
+      currentStep++
+      const newProgress = (currentStep / steps) * 100
+      setProgress(newProgress)
+      setCounter(Math.floor(newProgress))
+
+      const wordIndex = Math.floor((currentStep / steps) * words.length)
+      if (wordIndex < words.length) {
         setWordClass('entering')
         setTimeout(() => setWordClass('active'), 50)
-        if (wordIdx < words.length - 1) setTimeout(nextWord, 700)
-      }, 350)
-    }
-    setTimeout(nextWord, 700)
+      }
 
-    // Progress animation
-    const DURATION = 2000
-    const startTime = Date.now()
-    const animateProgress = () => {
-      const elapsed = Date.now() - startTime
-      const progressValue = Math.min(elapsed / DURATION, 1)
-      setProgress(Math.round(progressValue * 100))
-
-      if (progressValue < 1) {
-        requestAnimationFrame(animateProgress)
-      } else {
+      if (currentStep >= steps) {
+        clearInterval(timer)
         setTimeout(() => {
           setFadeOut(true)
           setTimeout(() => {
             setHidden(true)
-          }, 650)
-        }, 300)
+          }, 600)
+        }, 500)
       }
-    }
-    requestAnimationFrame(animateProgress)
-  }, [])
+    }, interval)
 
-  if (hidden) return null
+    return () => clearInterval(timer)
+  }, [words.length])
 
   return (
     <div
-      id="loading-screen"
       className={`preloader-loader ${fadeOut ? 'preloader-fadeOut' : ''} ${hidden ? 'preloader-hidden' : ''}`}
     >
       <div className={`preloader-loaderLabel ${visible ? 'preloader-visible' : ''}`}>
-        SPTECH Studio Web
+        Loading
       </div>
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div className={`preloader-loaderWord ${wordClass === 'entering' ? 'preloader-entering' : wordClass === 'active' ? 'preloader-active' : 'preloader-exiting'}`}>
-          {currentWord}
-        </div>
+      <div
+        className={`preloader-loaderWord ${wordClass === 'entering' ? 'preloader-entering' : wordClass === 'active' ? 'preloader-active' : 'preloader-exiting'}`}
+      >
+        {words[Math.min(Math.floor((progress / 100) * words.length), words.length - 1)]}
       </div>
       <div className={`preloader-loaderCounter ${visible ? 'preloader-visible' : ''}`}>
-        {progress.toString().padStart(3, '0')}
+        {counter}
       </div>
       <div className="preloader-loaderBarTrack">
         <div className="preloader-loaderBarFill" style={{ width: `${progress}%` }} />

@@ -2,7 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@keyframes spotlight {
+  0% {
+    opacity: 0;
+    transform: translateY(-20%) translateX(-10%);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20%) translateX(10%);
+  }
+}
+
+.animate-spotlight {
+  animation: spotlight 8s ease-in-out infinite;
+}
 
 :root {
   --dark-950: #050508;
@@ -583,3 +601,4 @@ input:focus, textarea:focus {
   width: 0%;
   transition: width 0.1s linear;
 }
+

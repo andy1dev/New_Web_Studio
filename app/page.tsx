@@ -47,14 +47,14 @@ export default function Home() {
     <>
       <Preloader />
       <main className="relative">
-      <Navbar />
-      <Hero />
-      <Services />
-      <Technologies />
-      <About />
-      <Portfolio />
-      <Metrics />
-      <Footer />
+        <Navbar />
+        <Hero />
+        <Services />
+        <Technologies />
+        <About />
+        <Portfolio />
+        <Metrics />
+        <Footer />
       </main>
     </>
   )

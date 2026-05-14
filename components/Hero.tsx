@@ -1,8 +1,10 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, Suspense } from 'react'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import dynamic from 'next/dynamic'
+import { SplineScene } from '@/components/ui/splite'
+import { Spotlight } from '@/components/ui/spotlight'
 
 const ParticleBackground = dynamic(() => import('./3d/ParticleBackground'), { ssr: false })
 
@@ -48,19 +50,35 @@ export default function Hero() {
 
   return (
     <section
+      id="hero"
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden grid-bg"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden grid-bg pt-20"
     >
       <ParticleBackground />
+
+      <div className="absolute inset-0 z-[5]">
+        <Suspense fallback={
+          <div className="w-full h-full flex items-center justify-center bg-dark-950/50">
+            <div className="w-12 h-12 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
+          </div>
+        }>
+          <SplineScene 
+            scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode" 
+            className="w-full h-full"
+          />
+        </Suspense>
+      </div>
+
+      <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="cyan" />
 
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-dark-950/50 to-dark-950 z-10" />
 
       <motion.div
         style={{ y, opacity, scale }}
-        className="relative z-20 max-w-6xl mx-auto px-6 text-center"
+        className="relative z-20 max-w-4xl lg:max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
       >
         
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mb-8">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-[1.1] mb-6 md:mb-8">
           {headlineWords.map((word, index) => (
             <motion.span
               key={index}
@@ -82,7 +100,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.9 }}
-          className="text-xl md:text-2xl dark:text-zinc-400 text-zinc-600 max-w-3xl mx-auto mb-10 leading-relaxed"
+          className="text-lg sm:text-xl md:text-2xl dark:text-zinc-400 text-zinc-600 max-w-2xl lg:max-w-3xl mx-auto mb-8 md:mb-10 leading-relaxed"
         >
           <motion.span
             initial={{ opacity: 0 }}
@@ -106,11 +124,11 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 1.1 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
+          className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-12 md:mb-16"
         >
           <motion.button
             ref={ctaRef}
-            className="group relative px-8 py-4 rounded-xl font-semibold text-lg overflow-hidden transition-all duration-300 hover:scale-105"
+            className="group relative px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg overflow-hidden transition-all duration-300 hover:scale-105"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             style={{
@@ -143,7 +161,7 @@ export default function Hero() {
 
           <motion.button
             ref={secondCtaRef}
-            className="group relative px-8 py-4 rounded-xl font-semibold text-lg border dark:border-zinc-700 border-zinc-300 dark:text-zinc-300 text-zinc-700 transition-all duration-300 glass overflow-hidden"
+            className="group relative px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg border dark:border-zinc-700 border-zinc-300 dark:text-zinc-300 text-zinc-700 transition-all duration-300 glass overflow-hidden"
             whileHover={{ scale: 1.05, borderColor: 'rgba(0, 212, 255, 0.5)' }}
             whileTap={{ scale: 0.95 }}
           >
