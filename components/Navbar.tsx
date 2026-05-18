@@ -96,7 +96,7 @@ export default function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 md:hidden dark:bg-dark-950/98 bg-white/98 backdrop-blur-xl pt-24 px-6"
+            className="fixed inset-0 z-40 md:hidden dark:bg-dark-950/98 bg-white/98 backdrop-blur-xl pt-28 px-6"
           >
             <div className="flex flex-col gap-6">
               {navItems.map((item, index) => (
@@ -116,7 +116,7 @@ export default function Navbar() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="mt-8"
+                className="mt-8 flex justify-center"
               >
                 <a 
                   href="#contacto"
@@ -124,7 +124,7 @@ export default function Navbar() {
                     e.preventDefault()
                     handleNavClick('#contacto')
                   }}
-                  className="block w-full py-4 rounded-xl text-center font-semibold bg-gradient-to-r from-neon-blue to-neon-cyan text-dark-950"
+                  className="px-8 py-4 rounded-xl text-base font-semibold text-center bg-gradient-to-r from-neon-blue to-neon-cyan text-dark-950 shadow-lg shadow-neon-blue/20"
                 >
                   Comenzar Proyecto
                 </a>

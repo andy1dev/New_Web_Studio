@@ -25,6 +25,14 @@ export default function HtmlPreloader({ duration = 4000, onComplete }: HtmlPrelo
   const [progress, setProgress] = useState(0);
   const [time, setTime] = useState("");
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -175,15 +183,18 @@ export default function HtmlPreloader({ duration = 4000, onComplete }: HtmlPrelo
             flexDirection: "column",
             alignItems: "center",
             gap: "24px",
+            padding: "0 20px",
+            width: "100%",
+            maxWidth: "100%",
           }}
         >
           {/* 3D Cube */}
           <div
             style={{
               perspective: "600px",
-              width: "100px",
-              height: "100px",
-              marginBottom: "24px",
+              width: isMobile ? "60px" : "80px",
+              height: isMobile ? "60px" : "80px",
+              marginBottom: isMobile ? "12px" : "20px",
               animation: "cubePulse 2s ease-in-out infinite",
             }}
           >
@@ -197,10 +208,10 @@ export default function HtmlPreloader({ duration = 4000, onComplete }: HtmlPrelo
               }}
             >
               {[
-                { transform: "translateZ(30px)", borderColor: "rgba(34,211,238,0.3)" },
-                { transform: "rotateY(180deg) translateZ(30px)", borderColor: "rgba(168,85,247,0.3)" },
-                { transform: "rotateY(90deg) translateZ(30px)", borderColor: "rgba(34,211,238,0.3)" },
-                { transform: "rotateY(-90deg) translateZ(30px)", borderColor: "rgba(168,85,247,0.3)" },
+                { transform: isMobile ? "translateZ(20px)" : "translateZ(30px)", borderColor: "rgba(34,211,238,0.3)" },
+                { transform: isMobile ? "rotateY(180deg) translateZ(20px)" : "rotateY(180deg) translateZ(30px)", borderColor: "rgba(168,85,247,0.3)" },
+                { transform: isMobile ? "rotateY(90deg) translateZ(20px)" : "rotateY(90deg) translateZ(30px)", borderColor: "rgba(34,211,238,0.3)" },
+                { transform: isMobile ? "rotateY(-90deg) translateZ(20px)" : "rotateY(-90deg) translateZ(30px)", borderColor: "rgba(168,85,247,0.3)" },
               ].map((face, i) => (
                 <div
                   key={i}
@@ -222,41 +233,42 @@ export default function HtmlPreloader({ duration = 4000, onComplete }: HtmlPrelo
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "16px",
-              padding: "32px",
-              borderRadius: "12px",
+              gap: isMobile ? "8px" : "12px",
+              padding: isMobile ? "14px" : "20px",
+              borderRadius: isMobile ? "8px" : "12px",
               background: "rgba(255,255,255,0.02)",
               border: "1px solid rgba(255,255,255,0.08)",
               backdropFilter: "blur(10px)",
               boxShadow: "0 0 30px rgba(34,211,238,0.1), 0 0 60px rgba(168,85,247,0.05)",
-              minWidth: "360px",
+              width: "100%",
+              maxWidth: isMobile ? "300px" : "360px",
               animation: "panelGlow 3s ease-in-out infinite",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: "12px", width: "100%" }}>
-              <span style={{ color: "#22d3ee", fontSize: "13px", fontWeight: 700 }}>LOCAL_TIME</span>
+            <div style={{ display: "flex", alignItems: "center", gap: isMobile ? "4px" : "8px", width: "100%", flexWrap: "wrap" }}>
+              <span style={{ color: "#22d3ee", fontSize: isMobile ? "9px" : "11px", fontWeight: 700 }}>LOCAL_TIME</span>
               <span style={{ color: "rgba(255,255,255,0.3)" }}>|</span>
-              <span style={{ color: "rgba(255,255,255,0.5)", fontSize: "14px" }}>(UTC-5:00)</span>
-              <span style={{ color: "rgba(255,255,255,0.7)", fontSize: "14px" }}>{time}</span>
+              <span style={{ color: "rgba(255,255,255,0.5)", fontSize: isMobile ? "10px" : "12px" }}>(UTC-5:00)</span>
+              <span style={{ color: "rgba(255,255,255,0.7)", fontSize: isMobile ? "10px" : "12px" }}>{time}</span>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "12px", width: "100%" }}>
-              <span style={{ color: "#22d3ee", fontSize: "13px", fontWeight: 700 }}>LOADING</span>
+            <div style={{ display: "flex", alignItems: "center", gap: isMobile ? "4px" : "8px", width: "100%" }}>
+              <span style={{ color: "#22d3ee", fontSize: isMobile ? "9px" : "11px", fontWeight: 700 }}>LOADING</span>
               <span style={{ color: "rgba(255,255,255,0.3)" }}>|</span>
-              <span style={{ fontSize: "16px" }}>
+              <span style={{ fontSize: isMobile ? "12px" : "14px" }}>
                 <span style={{ color: "#fff" }}>{Math.round(progress)}</span>
-                <span style={{ color: "rgba(255,255,255,0.5)", fontSize: "14px" }}>%</span>
+                <span style={{ color: "rgba(255,255,255,0.5)", fontSize: isMobile ? "10px" : "12px" }}>%</span>
                 <span style={{ color: "#22d3ee", animation: "blink 1s infinite", marginLeft: "2px" }}>_</span>
               </span>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "12px", width: "100%" }}>
-              <span style={{ color: "#22d3ee", fontSize: "13px", fontWeight: 700 }}>STATUS</span>
+            <div style={{ display: "flex", alignItems: "center", gap: isMobile ? "4px" : "8px", width: "100%" }}>
+              <span style={{ color: "#22d3ee", fontSize: isMobile ? "9px" : "11px", fontWeight: 700 }}>STATUS</span>
               <span style={{ color: "rgba(255,255,255,0.3)" }}>|</span>
               <span
                 style={{
                   color: progress >= 100 ? "#4ade80" : "#fbbf24",
-                  fontSize: "16px",
+                  fontSize: isMobile ? "12px" : "14px",
                   textShadow: progress < 100 ? "0 0 10px #fbbf24" : "0 0 10px #4ade80",
                 }}
               >
@@ -264,14 +276,14 @@ export default function HtmlPreloader({ duration = 4000, onComplete }: HtmlPrelo
               </span>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", width: "100%", marginTop: "8px" }}>
-              <span style={{ color: "#22d3ee", fontSize: "16px" }}>[</span>
+            <div style={{ display: "flex", alignItems: "center", gap: isMobile ? "4px" : "6px", width: "100%", marginTop: isMobile ? "2px" : "4px" }}>
+              <span style={{ color: "#22d3ee", fontSize: isMobile ? "12px" : "14px" }}>[</span>
               <div
                 style={{
                   flex: 1,
-                  height: "10px",
+                  height: isMobile ? "6px" : "8px",
                   background: "rgba(255,255,255,0.1)",
-                  borderRadius: "6px",
+                  borderRadius: isMobile ? "3px" : "4px",
                   overflow: "hidden",
                   position: "relative",
                 }}
@@ -281,13 +293,13 @@ export default function HtmlPreloader({ duration = 4000, onComplete }: HtmlPrelo
                     width: `${Math.min(progress, 100)}%`,
                     height: "100%",
                     background: "linear-gradient(90deg, #22d3ee, #a855f7)",
-                    borderRadius: "4px",
-                    boxShadow: "0 0 15px rgba(34,211,238,0.6)",
+                    borderRadius: "2px",
+                    boxShadow: "0 0 10px rgba(34,211,238,0.6)",
                     transition: "width 0.05s linear",
                   }}
                 />
               </div>
-              <span style={{ color: "#22d3ee", fontSize: "16px" }}>]</span>
+              <span style={{ color: "#22d3ee", fontSize: isMobile ? "12px" : "14px" }}>]</span>
             </div>
           </div>
         </div>
@@ -296,13 +308,13 @@ export default function HtmlPreloader({ duration = 4000, onComplete }: HtmlPrelo
         <div
           style={{
             position: "absolute",
-            bottom: "40px",
+            bottom: isMobile ? "16px" : "24px",
             display: "flex",
             alignItems: "center",
-            gap: "20px",
-            fontSize: "13px",
+            gap: isMobile ? "8px" : "12px",
+            fontSize: isMobile ? "9px" : "11px",
             color: "rgba(255,255,255,0.3)",
-            letterSpacing: "0.2em",
+            letterSpacing: isMobile ? "0.1em" : "0.15em",
           }}
         >
           <span>STUDIO</span>
